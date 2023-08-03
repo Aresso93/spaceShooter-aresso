@@ -1,7 +1,7 @@
 class BaseEnemy extends GameObject{
     constructor(x, y, width, height){
         super(x, y, width, height);
-        this.speed = 3;
+        this.speed = 2;
         this.isAlive = true;
         this.healthPoints = 1;
         this.score = 100;
@@ -13,7 +13,12 @@ class BaseEnemy extends GameObject{
     }
 
     move(canvasHeight){
+        //movimento verticale
         this.y = this.y + this.speed;
+        
+        //movimento orizzontale
+        this.x = this.x + this.speed;
+
         this.outOfGame(canvasHeight);
     }
 

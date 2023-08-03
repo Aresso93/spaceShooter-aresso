@@ -7,7 +7,10 @@ canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
 let animate;
-const player = new Player(canvasWidth / 2, canvasHeight / 2, 50, 50);
+const player = new Player(canvasWidth / 2, 600, 50, 50);
+const building1 = new Building(1200, 800, 90, 80)
+const building2 = new Building(canvasWidth / 2, 800, 90, 80)
+const building3 = new Building(700, 800, 90, 80)
 let allEnemies = [];
 let enemyCooldown = 120;
 let minibossCoolDown = 200;
@@ -44,6 +47,9 @@ function animation() {
     gameStates();
     if (state === "Play") {
         if (player) {
+            building1.draw(ctx);
+            building2.draw(ctx);
+            building3.draw(ctx);
             player.draw(ctx);
             player.control(canvasWidth, canvasHeight);
             playerProjectiles = player.projectiles;
@@ -89,7 +95,7 @@ function minibossSpawn() {
         miniboss.score = 1000;
         miniboss.speed = xPos < 0.5 ? 2 : -2;
         allEnemies.push(miniboss);
-        minibossCoolDown = 200;
+        minibossCoolDown = 2000;
     }
 }
 
