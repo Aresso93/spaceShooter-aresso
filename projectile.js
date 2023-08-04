@@ -8,6 +8,7 @@ class Projectile extends GameObject{
     }
 
     draw(ctx){
+        ctx.fillStyle = "green";
         super.draw(ctx);
         this.death();
     }

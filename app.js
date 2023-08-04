@@ -8,9 +8,9 @@ canvas.height = canvasHeight;
 
 let animate;
 const player = new Player(canvasWidth / 2, 600, 50, 50);
-const building1 = new Building(1200, 800, 90, 80)
+const building1 = new Building(500, 800, 90, 80)
 const building2 = new Building(canvasWidth / 2, 800, 90, 80)
-const building3 = new Building(700, 800, 90, 80)
+const building3 = new Building(1400, 800, 90, 80)
 let allEnemies = [];
 let enemyCooldown = 120;
 let minibossCoolDown = 200;
@@ -27,6 +27,11 @@ minibossProjectiles = []
 
 let state = "Play";
 
+let background = new Image();
+background.src = './assets/space.png';
+let background_y = 0;
+
+
 gameOverBtn.addEventListener("click", () => {
     player.healthPoints = 3;
     player.projectiles = [];
@@ -34,7 +39,7 @@ gameOverBtn.addEventListener("click", () => {
     gameOver.style.display = "none";
     player.score = 0;
     player.x = canvasWidth / 2;
-    player.y = canvasHeight / 2
+    player.y = 600;
 });
 
 function animation() {
@@ -46,6 +51,7 @@ function animation() {
     // canvas.height = canvasHeight;
     gameStates();
     if (state === "Play") {
+        this.loopBackground();
         if (player) {
             building1.draw(ctx);
             building2.draw(ctx);
@@ -53,6 +59,7 @@ function animation() {
             player.draw(ctx);
             player.control(canvasWidth, canvasHeight);
             playerProjectiles = player.projectiles;
+            
         }
 
         enemyCooldown--;
@@ -67,7 +74,7 @@ function animation() {
             enemy.draw(ctx);
             enemy.move(canvasHeight);
             if (enemy.projectiles) {
-                minibossProjectiles.push(enemy.projectiles);
+                minibossProjectiles.push(...enemy.projectiles);
             }
         }
 
@@ -75,9 +82,10 @@ function animation() {
         // hpText.innerText="Vita : " + player.healthPoints;
         scoreText.innerText = "Score : " + player.score;
         hpBar.style.width = hpWidth * player.healthPoints + "%";
-
+       
     } else if (state === "GameOver") {
         gameOver.style.display = "flex";
+        
     }
 }
 
@@ -88,6 +96,7 @@ function enemySpawn() {
 }
 
 function minibossSpawn() {
+    minibossProjectiles = [];
     minibossCoolDown--;
     if (minibossCoolDown <= 0) {
         let xPos = Math.random() < 0.5 ? 0 - 128 : canvasWidth;
@@ -104,8 +113,8 @@ function enemyCollision() {
     let enemyAssets = [...allEnemies, ...minibossProjectiles];
     for (let i = 0; i < playerAssets.length; i++) {
         const pA = playerAssets[i];
-        for (let j = 0; j < allEnemies.length; j++) {
-            const enemy = allEnemies[j];
+        for (let j = 0; j < enemyAssets.length; j++) {
+            const enemy = enemyAssets[j];
             if (
                 enemy.x < pA.x + pA.width &&
                 enemy.x + enemy.width > pA.x &&
@@ -116,7 +125,7 @@ function enemyCollision() {
                 enemy.healthPoints--;
                 pA.healthPoints--;
                 enemy.death();
-                if (!enemy.isAlive) {
+                if (!enemy.isAlive && enemy.score && !pA.isPlayer) {
                     player.score += enemy.score;
                 }
             }
@@ -139,6 +148,17 @@ function gameStates() {
     
         default:
             break;
+    }
+}
+
+function loopBackground(){
+    ctx.drawImage(background, 0, background_y, canvasWidth, canvasHeight);
+    //il primo 0 è la X. Anche la Y è 0 perché lo sfondo si origina sull'origine di tutta la canvas
+    ctx.drawImage(background, 0, background_y - canvasHeight, canvasWidth, canvasHeight)
+    //la X è sempre 0 perché non si muove
+    background_y++;
+    if (background_y >= canvasHeight) {
+        background_y = 0;
     }
 }
 

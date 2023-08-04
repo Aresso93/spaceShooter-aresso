@@ -11,6 +11,7 @@ class Building extends GameObject {
 
 
     draw(ctx) {
+        ctx.fillStyle = "purple";
         super.draw(ctx);
         console.log(this.healthPoints);
     }
